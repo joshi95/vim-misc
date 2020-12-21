@@ -27,13 +27,108 @@ set listchars=tab:›\ ,eol:¬,trail:⋅ "Set the characters for the invisibles
 
 colorscheme murphy        " Change a colorscheme.
 
-" settings
-set directory=" . g:vim_home_path . "/swap"
-set backupdir=" . g:vim_home_path . "/backup"
-set undodir=" . g:vim_home_path . "/undo"
-set backup
-set undofile
-set writebackup
-
+if !has("win32")
+    set showbreak=↪       " Put the character to show a line has been wrapped
+end
 
 syntax on                 " Enable syntax highlighting.
+
+"" Backup settings
+"execute "set directory=" . g:vim_home_path . "/swap"
+"execute "set backupdir=" . g:vim_home_path . "/backup"
+"execute "set undodir=" . g:vim_home_path . "/undo"
+"set backup
+"set undofile
+"set writebackup
+
+
+" Search settings
+set hlsearch   " Highlight results
+set ignorecase " Ignore casing of searches
+set incsearch  " Start showing results as you type
+set smartcase  " Be smart about case sensitivity when searching
+
+" Tab settings
+set expandtab     " Expand tabs to the proper type and size
+set tabstop=4     " Tabs width in spaces
+set softtabstop=4 " Soft tab width in spaces
+set shiftwidth=4  " Amount of spaces when shifting
+
+" Tab completion settings
+set wildmode=list:longest     " Matching the longest first
+set wildignore+=.git,.hg,.svn " Ignore version control repos
+set wildignore+=*.6           " Ignore Go compiled files
+set wildignore+=*.pyc         " Ignore Python compiled files
+set wildignore+=*.rbc         " Ignore Rubinius compiled files
+set wildignore+=*.swp         " Ignore vim backups
+
+"" GUI settings
+"let g:dracula_italic = 0 " We don't support italics in our terminal
+"packadd! dracula
+"colorscheme dracula
+
+" This is required to force 24-bit color since I use a modern terminal.
+set termguicolors
+
+if !has("gui_running")
+    " vim hardcodes background color erase even if the terminfo file does
+    " not contain bce (not to mention that libvte based terminals
+    " incorrectly contain bce in their terminfo files). This causes
+    " incorrect background rendering when using a color theme with a
+    " background color.
+    "
+    " see: https://github.com/kovidgoyal/kitty/issues/108
+    let &t_ut=''
+endif
+
+set guioptions=cegmt
+if has("win32")
+    set guifont=Inconsolata:h11
+else
+    set guifont=Monaco\ for\ Powerline:h12
+endif
+
+if exists("&fuopt")
+    set fuopt+=maxhorz
+endif
+
+"----------------------------------------------------------------------
+" Key Mappings
+"----------------------------------------------------------------------
+" Remap a key sequence in insert mode to kick me out to normal
+" mode. This makes it so this key sequence can never be typed
+" again in insert mode, so it has to be unique.
+inoremap jj <esc>
+inoremap jJ <esc>
+inoremap Jj <esc>
+inoremap JJ <esc>
+inoremap jk <esc>
+inoremap jK <esc>
+inoremap Jk <esc>
+inoremap JK <esc>
+
+" Make j/k visual down and up instead of whole lines. This makes word
+" wrapping a lot more pleasent.
+map j gj
+map k gk
+
+" Shortcut to edit the vimrc
+if has("nvim")
+    nmap <silent> <leader>vimrc :e ~/nvim/init.vim<CR>
+else
+    nmap <silent> <leader>vimrc :e ~/.vimrc<CR>
+endif
+
+" Make navigating around splits easier
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-h> <C-w>h
+nnoremap <C-l> <C-w>l
+if has('nvim')
+  " We have to do this to fix a bug with Neovim on OS X where C-h
+  " is sent as backspace for some reason.
+  nnoremap <BS> <C-W>h
+endif
+
+" Get rid of search highlights
+noremap <silent><leader>/ :nohlsearch<cr>
