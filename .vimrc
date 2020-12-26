@@ -119,11 +119,6 @@ else
     nmap <silent> <leader>vimrc :e ~/.vimrc<CR>
 endif
 
-" Make navigating around splits easier
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-h> <C-w>h
-nnoremap <C-l> <C-w>l
 if has('nvim')
   " We have to do this to fix a bug with Neovim on OS X where C-h
   " is sent as backspace for some reason.
